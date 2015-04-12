@@ -1,5 +1,3 @@
-    //var map;
-
     function pollTweets() {
       requestTweets();
     };
@@ -36,6 +34,7 @@
     
 
     function initialize() {
+
       var pos1 = new google.maps.LatLng(43.7045,-72.2946);
       var pos2 = new google.maps.LatLng(43.7045,-72.2946);
 
@@ -55,9 +54,9 @@
 
       map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
       console.log("Map set");
-      //pollTweets();
-      //setInterval(pollTweets, 10000);
+
       pollTweets();
+
 
       var marker2 = new google.maps.Marker({
           position: {lat: 43.7045, lng: -72.2946},
@@ -65,6 +64,7 @@
           map: map,
           title: 'Hello World!'
       });
+    }
 
     function setMarkers(map, locations) {
       console.log(locations)
@@ -85,11 +85,7 @@
                   scale: 10,
                 },
               title: keyword['time'],
-              
-          }
-          );
-
-
+          });
 
           marker.info = new google.maps.InfoWindow({
             content: contentStringArray[i],
@@ -98,21 +94,15 @@
           
           my_markers.push(marker);
 
-
-          //setTimeout(function(){console.log(my_markers)}, 3000)
-          
-
           google.maps.event.addListener(my_markers[i], 'click', function() {
           this.info.open(map,my_markers[i]);
           });
 
           setTimeout(function(){
-          //requestTweets();
           setClear();
           }, 10000);
 
       }
-
     }
 
     function buttonFunct(){

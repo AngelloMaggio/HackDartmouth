@@ -11,6 +11,7 @@ author: bootply.com
 
 html,body{
   	height:100%;
+  	font-family: "Helvetica";
 }
 
 body{
@@ -22,12 +23,12 @@ body{
 }
 
 .navbar-custom {
-	background-color: #168ccc;
+	background-color: #78AB46;
     color:#fff;
 }
 
 .navbar-custom li>a:hover,.navbar-custom li>a:focus {
-	background-color:#49bfff;
+	background-color:#66CD00;
 }
 
 .navbar-custom a{
