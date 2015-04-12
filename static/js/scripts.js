@@ -1,7 +1,10 @@
+
+
+
     function pollTweets() {
       requestTweets();
     };
-
+    pos = {};
     tweetData = {};
     map = {};
     my_markers = [];
@@ -31,14 +34,51 @@
         dataType: 'json'
       });
     }
-    
+
+       function getMyGeolocation(){
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+              var pos = new google.maps.LatLng(position.coords.latitude,
+                                               position.coords.longitude);
+              console.log(pos);
+              var infowindow = new google.maps.InfoWindow({
+                map: map,
+                position: pos,
+                content: 'Location found using HTML5.'
+              });
+
+              map.setCenter(pos);
+            }, function() {
+              handleNoGeolocation(true);
+            });
+          } else {
+            // Browser doesn't support Geolocation
+            handleNoGeolocation(false);
+          }
+
+          }
+
+        function handleNoGeolocation(errorFlag) {
+          if (errorFlag) {
+            var content = 'Error: The Geolocation service failed.';
+          } else {
+            var content = 'Error: Your browser doesn\'t support geolocation.';
+          }
+
+          var options = {
+            map: map,
+            position: new google.maps.LatLng(60, 105),
+            content: content
+          };
+
+          var infowindow = new google.maps.InfoWindow(options);
+          map.setCenter(options.position);
+        }
+
 
     function initialize() {
 
-      var pos1 = new google.maps.LatLng(43.7045,-72.2946);
-      var pos2 = new google.maps.LatLng(43.7045,-72.2946);
-
-      var goldStar = {
+        var goldStar = {
         path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z',
         fillColor: "yellow",
         fillOpacity: 0.8,
@@ -47,7 +87,13 @@
         strokeWeight: 14
       };
 
-      var mapOptions = {
+
+        //Location stuff
+        getMyGeolocation();
+        //End of location stuff
+
+
+       var mapOptions = {
         zoom: 16,
         center: {lat: 43.7045, lng: -72.2946},
       }
@@ -55,54 +101,22 @@
       map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
       console.log("Map set");
 
-      pollTweets();
-
-
       var marker2 = new google.maps.Marker({
           position: {lat: 43.7045, lng: -72.2946},
           icon: goldStar,
           map: map,
           title: 'Hello World!'
       });
-    }
 
-    function setMarkers(map, locations) {
-      console.log(locations)
-      for (var i = 0; i < locations.length; i++) {
+       setInterval(function(){
+       //marker2.setMap(null);
+       getMyGeolocation();
+       marker2.position = {lat: 43.7045, lng: -72.2946}
+       //marker2.setMap(map);
+        }, 5000);
 
-          console.log("Inside setMarkers")
-          console.log(locations[i])
-          var keyword = locations[i];
-          var myLatLng = new google.maps.LatLng(keyword['locationy'], keyword['locationx']);
-          locationArray.push(myLatLng);
-          contentStringArray.push(keyword['text'])
-          var marker = new google.maps.Marker({
-              position: myLatLng,
-              map: map,
-              animation: google.maps.Animation.BOUNCE,
-              icon: {
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: 10,
-                },
-              title: keyword['time'],
-          });
 
-          marker.info = new google.maps.InfoWindow({
-            content: contentStringArray[i],
-            position: locationArray[i],
-          });
-          
-          my_markers.push(marker);
 
-          google.maps.event.addListener(my_markers[i], 'click', function() {
-          this.info.open(map,my_markers[i]);
-          });
-
-          setTimeout(function(){
-          setClear();
-          }, 10000);
-
-      }
     }
 
     function buttonFunct(){
